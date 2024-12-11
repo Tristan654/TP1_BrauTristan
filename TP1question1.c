@@ -1,3 +1,7 @@
+//Travail Bilal Bachiri et Brau tristan
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,9 +13,9 @@
 
 
 int main() {
-    write(STDERR_FILENO,"Bienvenue dans le Shell ENSEA.\n",sizeof("Bienvenue dans le Shell ENSEA."));
-    write(STDERR_FILENO,"Pour quitter, tapez 'exit'.\n",sizeof("Pour quitter, tapez 'exit'."));
-    write(STDERR_FILENO, PROMPT, sizeof(PROMPT));
+    write(1,"Bienvenue dans le Shell ENSEA.\n",sizeof("Bienvenue dans le Shell ENSEA."));
+    write(1,"Pour quitter, tapez 'exit'.\n",sizeof("Pour quitter, tapez 'exit'."));
+    write(1, PROMPT, sizeof(PROMPT));
 
 
     return 0;

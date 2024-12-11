@@ -1,37 +1,38 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
 
-#define Max_size_command 1024
-#define Prompt "enseah %"
+#define MSG_MAX_LENGTH 256
 
+// display the welcome message without printf
+void display_welcome_message() {
+const char *welcome_message = "$ ./enseash\nWelcome to ENSEA Tiny Shell.\nType 'exit' to quit.\n";
+write(STDOUT_FILENO, welcome_message, strlen(welcome_message));
+}
 
-void loop(void){
-  // size max of the command
-  char message[Max_size_command];
-  
-    do{
-    write(1, Prompt, sizeof(Prompt));
+// display the prompt to indicate to the user that he can enter a command
+void display_prompt() {
+write(STDOUT_FILENO, "enseash % ", 10);
+}
 
-    // write a command
-    if (fgets(message, sizeof(message), stdin) == NULL) { // like gets allow to read a line write from the keyboard(stdin) until you reach the size given.
-        break; 
-    }
-
-
-}while(1);}
-
-
-
+// read the user's command
+ssize_t read_command(char *command) {
+return read(STDIN_FILENO, command, MSG_MAX_LENGTH - 1);
+}
 
 int main() {
-    write(1,"Bienvenue dans le Shell ENSEA.\n",sizeof("Bienvenue dans le Shell ENSEA."));
-    write(1,"Pour quitter, tapez 'exit'.\n",sizeof("Pour quitter, tapez 'exit'."));
+display_welcome_message();
 
 
-    // run function loop.
-    loop();
+while (1) {
+    char command[MSG_MAX_LENGTH];
 
-    return 0;
+    display_prompt();
+
+    ssize_t entry_bytes = read_command(command); 
+
+}
+
+return 0;
 }
