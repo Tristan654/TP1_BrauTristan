@@ -1,3 +1,6 @@
+//travail Bilal Bachiri et Brau Tristan
+
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
