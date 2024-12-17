@@ -10,26 +10,26 @@
 
 // display the welcome message without printf
 void display_welcome_message() {
-const char *welcome_message = "$ ./enseash\nWelcome to ENSEA Tiny Shell.\nType 'exit' to quit.\n";
-write(STDOUT_FILENO, welcome_message, strlen(welcome_message));
+    const char *welcome_message = "$ ./enseash\nWelcome to ENSEA Tiny Shell.\nType 'exit' to quit.\n";
+    write(STDOUT_FILENO, welcome_message, strlen(welcome_message));
 }
 
 // display the prompt to indicate to the user that he can enter a command
 void display_prompt() {
-write(STDOUT_FILENO, "enseash % ", 10);
+    write(STDOUT_FILENO, "enseash % ", 10);
 }
 
 // read the user's command
 ssize_t read_command(char *command) {
-return read(STDIN_FILENO, command, MSG_MAX_LENGTH - 1);
+    return read(STDIN_FILENO, command, MSG_MAX_LENGTH - 1);
 }
 
 // we verify if user type exit
 void process_command(const char *command) {
-if (strcmp(command, "exit") == 0) {
-write(STDOUT_FILENO, "Ciao...\n", 8);
-exit(0);
-}
+    if (strcmp(command, "exit") == 0) {
+        write(STDOUT_FILENO, "Ciao...\n", 8);
+        exit(0);
+    }
 }
 
 int main() {
