@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <sys/types.h> 
 #include <sys/wait.h>
+#include <time.h>
 
 #define MSG_MAX_LENGTH 256
 
@@ -51,22 +52,30 @@ void process_command(const char *command) {
         
         //before execv the child process execute the code
         execv(args[0], args); //after execv the child process execute the shell 
-        
+        perror("execlp error");
+        exit(1);
 
     } else if (ret > 0) {
-        //parent process
+                // This is the parent process
         int Statu_process;
-        waitpid(ret, &Statu_process, 0); // wait for the child process to finish
+        struct timespec start, end;
 
-        if (WIFEXITED(Statu_process)) {//verify if the child process is finished normally 
-            int exit_code = WEXITSTATUS(Statu_process);//return code
+        clock_gettime( CLOCK_MONOTONIC, &start); // Start timer
+        waitpid(ret, &Statu_process, 0); // wait for the child process to finish
+        clock_gettime(CLOCK_MONOTONIC, &end); // End timer
+
+        //calculated the time for the command to be execute
+        long elapsed_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
+
+        if (WIFEXITED(Statu_process)) {
+            int exit_code = WEXITSTATUS(Statu_process);
             char exit_message[50];
-            snprintf(exit_message, sizeof(exit_message), "[exit:%d] ", exit_code);//use a buffer to format the message [exit:%d] without outstrip the lenght  
+            snprintf(exit_message, sizeof(exit_message),"[exit:%d|%ldms] ", exit_code, elapsed_ms);
             write(STDOUT_FILENO, exit_message, strlen(exit_message));
         } else if (WIFSIGNALED(Statu_process)) {
             int signal_num = WTERMSIG(Statu_process);
             char signal_message[50];
-            snprintf(signal_message, sizeof(signal_message), "[sign:%d] ", signal_num);
+            snprintf(signal_message, sizeof(signal_message), "[sign:%d|%ldms] ", signal_num, elapsed_ms);
             write(STDOUT_FILENO, signal_message, strlen(signal_message));
         }
 

@@ -48,11 +48,12 @@ void process_command(const char *command) {
         //if ret == 0 we recognize the command and we go in the child process we allow to execute the command in parallel and once the commmand is finish 
         //we go back in the parent processus
 
-        char *args[] = {"/bin/sh", "-c", (char *)command, NULL};// this line allow to execute the command in the shell
         
-        //before execv the child process execute the code
-        execv(args[0], args); //after execv the child process execute the shell 
         
+        //before execlp the child process execute the code
+        execlp(command ,command,(char*)NULL); //after execlp the child process execute the shell 
+        perror("execlp error");
+        exit(1);
 
     } else if (ret > 0) {
                 // This is the parent process
