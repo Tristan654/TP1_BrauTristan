@@ -10,6 +10,7 @@
 #include <time.h>
 
 #define MSG_MAX_LENGTH 256
+#define ARG_MAX_LENGTH 6
 
 // display the welcome message without printf
 void display_welcome_message() {
@@ -47,12 +48,23 @@ void process_command(const char *command) {
     if (ret == 0) {
         //if ret == 0 we recognize the command and we go in the child process we allow to execute the command in parallel and once the commmand is finish 
         //we go back in the parent processus
+         
 
-        char *args[] = {"/bin/sh", "-c", (char *)command, NULL};// this line allow to execute the command in the shell
+        //we separate the arguments one by one and put them in a table and we execute them 
+        char *args[ARG_MAX_LENGTH + 2]; 
+        char *command_copy = strdup(command); 
+        char *token = strtok(command_copy, " ");
+        int i = 0;
+
         
-        //before execv the child process execute the code
-        execv(args[0], args); //after execv the child process execute the shell 
-        perror("execlp error");
+        while (token != NULL && i < ARG_MAX_LENGTH) {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+        args[i] = NULL; 
+
+        execvp(args[0], args); 
+        perror("execvp failed");
         exit(1);
 
     } else if (ret > 0) {
@@ -67,6 +79,8 @@ void process_command(const char *command) {
         //calculated the time for the command to be execute
         long elapsed_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
 
+
+        //same as question 4
         if (WIFEXITED(Statu_process)) {
             int exit_code = WEXITSTATUS(Statu_process);
             char exit_message[50];
